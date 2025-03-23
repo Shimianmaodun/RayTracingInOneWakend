@@ -1,0 +1,6 @@
+# Visual Studio临时文件
+.vs/
+*.user
+*.vcxproj.user
+*.vcxproj.filters
+# 如果这是C++项目，可能需要保留.vcxproj和.sln，但排除用户特定文件
