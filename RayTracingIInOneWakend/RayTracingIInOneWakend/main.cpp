@@ -10,17 +10,17 @@ using namespace std;
   0		0 255	//สýื้[3]
 */
 int main() {
-	int width = 256;
-	int height = 256;
+	int image_width = 256;
+	int image_height = 256;
 	fstream ofs;
 	ofs.open("./1.ppm", ios::out);
-	ofs << "P3\n" << width << " " << height << "\n255\n";
-	cout << "P3\n" << width << " " << height << "\n255\n";
-	for (int j = 0; j < height; ++j) {
-		cerr << "\rScanlines remaining: " << j << ' ' << flush;
-		for (int i = 0; i < width; ++i) {
-			auto r = double(i) / (width - 1);
-			auto g = double(j) / (height - 1);
+	ofs << "P3\n" << image_width << " " << image_height << "\n255\n";
+	cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+	for (int j = 0; j < image_height; j++) {
+		clog << "\rScanlines remaining:" << (image_height - j) << " " << flush;
+		for (int i = 0; i < image_width;i++) {
+			auto r = double(i) / (image_width - 1);
+			auto g = double(j) / (image_height - 1);
 			auto b = 0;
 			int ir = static_cast<int>(255.999 * r);
 			int ig = static_cast<int>(255.999 * g);
@@ -30,5 +30,5 @@ int main() {
 		}
 	}
 	ofs.close();
-	cerr << "\nDone.\n";
+	clog << "\nDone.   \n";
 }
