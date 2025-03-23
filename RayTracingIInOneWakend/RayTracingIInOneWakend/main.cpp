@@ -1,6 +1,7 @@
+#include"color.h"
+#include"vec3.h"
 #include<iostream>
 #include<fstream>
-using namespace std;
 /*P3			//ppm文件的一种格式
   2 2			//列行
   255			//颜色的范围，一般是255
@@ -12,23 +13,18 @@ using namespace std;
 int main() {
 	int image_width = 256;
 	int image_height = 256;
-	fstream ofs;
-	ofs.open("./1.ppm", ios::out);
+	std::fstream ofs;
+	ofs.open("./1.ppm", std::ios::out);
 	ofs << "P3\n" << image_width << " " << image_height << "\n255\n";
-	cout << "P3\n" << image_width << " " << image_height << "\n255\n";
+	std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 	for (int j = 0; j < image_height; j++) {
-		clog << "\rScanlines remaining:" << (image_height - j) << " " << flush;
+		std::clog << "\rScanlines remaining:" << (image_height - j) << " " << std::flush;
 		for (int i = 0; i < image_width;i++) {
-			auto r = double(i) / (image_width - 1);
-			auto g = double(j) / (image_height - 1);
-			auto b = 0;
-			int ir = static_cast<int>(255.999 * r);
-			int ig = static_cast<int>(255.999 * g);
-			int ib = static_cast<int>(255.999 * b);
-			ofs << ir << " " << ig << " " << ib << endl;
-			cout << ir << " " << ig << " " << ib << endl;
+			auto pixel_color = color(double(i) / (image_width - 1), double(j) / (image_height - 1), 0);
+			write_color(std::cout, pixel_color); // out fof console
+			write_color(ofs, pixel_color);        // out fof file
 		}
 	}
 	ofs.close();
-	clog << "\nDone.   \n";
+	std::clog << "\nDone.   \n";
 }
