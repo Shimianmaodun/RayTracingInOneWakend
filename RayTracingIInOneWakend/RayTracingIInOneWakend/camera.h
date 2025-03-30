@@ -7,10 +7,11 @@ public:
     double aspect_ratio         = 1.0;  // Ratio of image width over height
     int    image_width          = 100;  // Rendered image width in pixel count
     int    samples_per_pixel    = 10;
+    int    max_depth            = 10;
     void render(const hittable& world) {
         initialize();
         std::fstream ofs;
-        ofs.open("./2.ppm", std::ios::out);
+        ofs.open("./3.ppm", std::ios::out);
         ofs << "P3\n" << image_width << " " << image_height << "\n255\n";
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
         for (int j = 0; j < image_height; j++) {
@@ -19,7 +20,7 @@ public:
                 color pixel_color(0, 0, 0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world);
+                    pixel_color += ray_color(r,max_depth, world);
                 }
                 write_color(std::cout, pixel_samples_scale * pixel_color);
                 write_color(ofs, pixel_samples_scale * pixel_color);      // out for file
@@ -82,11 +83,15 @@ private:
         // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
     }
-    color ray_color(const ray& r, const hittable& world) const {
+    color ray_color(const ray& r,int depth, const hittable& world) const {
+        if (depth<=0){
+            return color(0, 0, 0);
+        }
         hit_record rec;
 
-        if (world.hit(r, interval(0, infinity), rec)) {
-            return 0.5 * (rec.normal + color(1, 1, 1));
+        if (world.hit(r, interval(0.001, infinity), rec)) {
+            vec3 direction = rec.normal + random_unit_vector();
+            return 0.3 * ray_color(ray(rec.p, direction),depth-1, world);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
