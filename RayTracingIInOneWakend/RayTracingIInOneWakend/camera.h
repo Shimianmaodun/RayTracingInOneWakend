@@ -1,6 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include "hittable.h"
+#include"material.h"
 #include<fstream>
 class camera {
 public:
@@ -11,7 +12,7 @@ public:
     void render(const hittable& world) {
         initialize();
         std::fstream ofs;
-        ofs.open("./3.ppm", std::ios::out);
+        ofs.open("./2.ppm", std::ios::out);
         ofs << "P3\n" << image_width << " " << image_height << "\n255\n";
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
         for (int j = 0; j < image_height; j++) {
@@ -90,8 +91,12 @@ private:
         hit_record rec;
 
         if (world.hit(r, interval(0.001, infinity), rec)) {
-            vec3 direction = rec.normal + random_unit_vector();
-            return 0.3 * ray_color(ray(rec.p, direction),depth-1, world);
+            ray scattered;
+            color attenuation;
+            if (rec.mat->scatter(r, rec, attenuation, scattered))
+                return attenuation * ray_color(scattered, depth - 1, world);
+
+            return color(0,0,0);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
