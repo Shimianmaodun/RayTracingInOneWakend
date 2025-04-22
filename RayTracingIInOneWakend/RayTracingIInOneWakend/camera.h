@@ -11,7 +11,7 @@ public:
     int    max_depth            = 10;
 
     double vfov = 90;
-    point3 lookform = point3(0, 0, 0);
+    point3 lookfrom = point3(0, 0, 0);
     point3 lookat = point3(0, 0, -1);
     vec3 vup = vec3(0, 1, 0);
 
@@ -20,7 +20,7 @@ public:
     void render(const hittable& world) {
         initialize();
         std::fstream ofs;
-        ofs.open("./6.ppm", std::ios::out);
+        ofs.open("./8.ppm", std::ios::out);
         ofs << "P3\n" << image_width << " " << image_height << "\n255\n";
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
         for (int j = 0; j < image_height; j++) {
@@ -56,7 +56,7 @@ private:
 
         pixel_samples_scale = 1.0 / samples_per_pixel;
 
-        center = lookform;
+        center = lookfrom;
 
         // Determine viewport dimensions.
 
@@ -66,7 +66,7 @@ private:
 
         auto viewport_width = viewport_height * (double(image_width) / image_height);
 
-        w = unit_vector(lookform - lookat);
+        w = unit_vector(lookfrom - lookat);
         u = unit_vector(cross(vup, w));
         v = cross(w, u);
 
